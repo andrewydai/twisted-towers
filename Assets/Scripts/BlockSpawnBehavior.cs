@@ -17,7 +17,6 @@ public class BlockSpawnBehavior : MonoBehaviour
 
     public void AddToQueue(GameObject[] blocksToAdd)
     {
-        Debug.Log(blocksToAdd[0]);
         foreach (GameObject block in blocksToAdd)
         {
             this.nextBlocks.Enqueue(block);
