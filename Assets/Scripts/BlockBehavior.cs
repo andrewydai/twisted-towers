@@ -6,7 +6,7 @@ public class BlockBehavior : MonoBehaviour
 {
     private float blockSpeed;
     private bool isDropping;
-    private float despawnY = -10;
+    private float despawnY = -12;
     private BlockSpawnBehavior spawnBehavior;
 
     // Start is called before the first frame update
@@ -20,13 +20,23 @@ public class BlockBehavior : MonoBehaviour
     {
         if (this.isDropping)
         {
-            float step = blockSpeed * Time.deltaTime;
+            float step = this.blockSpeed * Time.deltaTime;
             transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, this.despawnY), step);
         }
 
         if (transform.position.y <= despawnY)
         {
             GameObject.Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(this.isDropping)
+        {
+            this.isDropping = false;
+            gameObject.GetComponent<Rigidbody2D>().gravityScale = 1;
+            this.spawnBehavior.SpawnBlock();
         }
     }
 

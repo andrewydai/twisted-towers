@@ -53,8 +53,8 @@
     <UnityVersion>2020.3.26f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\BlockSpawnBehavior.cs" />
     <Compile Include="Assets\Scripts\BlockBehavior.cs" />
+    <Compile Include="Assets\Scripts\BlockSpawnBehavior.cs" />
     <Compile Include="Assets\Scripts\GameManagerBehavior.cs" />
   </ItemGroup>
   <ItemGroup>

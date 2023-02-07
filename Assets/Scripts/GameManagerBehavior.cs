@@ -30,7 +30,6 @@ public class GameManagerBehavior : MonoBehaviour
         for (int i = 0; i < blockCount; i++)
         {
             blocks[i] = this.blockGenerator.UpdateAndGetNextBlock();
-            this.blockGenerator.Print();
         }
         return blocks;
     }
