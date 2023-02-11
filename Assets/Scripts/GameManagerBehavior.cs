@@ -18,9 +18,19 @@ public class GameManagerBehavior : MonoBehaviour
         foreach (GameObject spawnerObject in spawnerObjects)
         {
             BlockSpawnBehavior spawnBehavior = spawnerObject.GetComponent<BlockSpawnBehavior>();
+            spawnBehavior.gameManagerBehavior = this;
             spawnBehavior.AddToQueue(initialBlocks);
             spawnBehavior.SpawnBlock();
             this.spawners.Add(spawnBehavior);
+        }
+    }
+
+    public void AddBlocksToSpawnerQueue()
+    {
+        GameObject[] blocks = RandomizeBlocks(10);
+        foreach (BlockSpawnBehavior spawnBehavior in this.spawners)
+        {
+            spawnBehavior.AddToQueue(blocks);
         }
     }
 
@@ -31,6 +41,7 @@ public class GameManagerBehavior : MonoBehaviour
         {
             blocks[i] = this.blockGenerator.UpdateAndGetNextBlock();
         }
+        this.blockGenerator.Print();
         return blocks;
     }
 }
@@ -148,6 +159,6 @@ public class BlockProbabilityRange
     public string Print(float prevUpperRange)
     {
         float probability = this.upperRange - prevUpperRange;
-        return this.prefab.GetInstanceID() + ":::" + probability;
+        return this.prefab.name + ":::" + probability;
     }
 }

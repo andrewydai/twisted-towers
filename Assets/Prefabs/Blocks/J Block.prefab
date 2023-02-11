@@ -50,6 +50,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8e5cec37254b444b9bcbe2ca2fb7ea2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlight: {fileID: 4229913733694301657, guid: 1d35d77520984db4582db41ec7aaaac6, type: 3}
+  width: 2
+  rotatedWidth: 3
 --- !u!50 &7947501395974015591
 Rigidbody2D:
   serializedVersion: 4
@@ -214,7 +217,7 @@ BoxCollider:
   m_GameObject: {fileID: 2387184933502240288}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -309,7 +312,7 @@ BoxCollider:
   m_GameObject: {fileID: 2387184934017697453}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -404,7 +407,7 @@ BoxCollider:
   m_GameObject: {fileID: 2387184934209791639}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -499,7 +502,7 @@ BoxCollider:
   m_GameObject: {fileID: 2387184934883987772}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
