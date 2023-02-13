@@ -38,7 +38,7 @@ public class BlockBehavior : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(this.isDropping)
+        if (this.isDropping)
         {
             this.isDropping = false;
             gameObject.GetComponent<Rigidbody2D>().gravityScale = 3;
@@ -59,7 +59,7 @@ public class BlockBehavior : MonoBehaviour
 
     private void OnDestroy()
     {
-        if(this.isDropping)
+        if (gameObject.scene.isLoaded && this.isDropping)
         {
             this.spawnBehavior.SpawnBlock();
         }
