@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class BlockBehavior : MonoBehaviour
 {
+    public GameObject highlight;
+    public float width;
+    public float rotatedWidth;
     private float blockSpeed;
     private bool isDropping;
-    private float despawnY = -10;
+    private float despawnY = -12;
+    private GameObject highlightObj;
     private BlockSpawnBehavior spawnBehavior;
 
     // Start is called before the first frame update
     void Start()
     {
+        this.highlightObj = Instantiate(this.highlight, this.transform);
+        this.highlightObj.transform.localScale = (highlightObj.transform.localScale * new Vector2(0, 1)) + (Vector2.one * this.width);
         this.isDropping = true;
     }
 
@@ -20,13 +26,24 @@ public class BlockBehavior : MonoBehaviour
     {
         if (this.isDropping)
         {
-            float step = blockSpeed * Time.deltaTime;
+            float step = this.blockSpeed * Time.deltaTime;
             transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, this.despawnY), step);
         }
 
         if (transform.position.y <= despawnY)
         {
             GameObject.Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(this.isDropping)
+        {
+            this.isDropping = false;
+            gameObject.GetComponent<Rigidbody2D>().gravityScale = 3;
+            GameObject.Destroy(this.highlightObj);
+            this.spawnBehavior.SpawnBlock();
         }
     }
 
@@ -42,6 +59,9 @@ public class BlockBehavior : MonoBehaviour
 
     private void OnDestroy()
     {
-        this.spawnBehavior.SpawnBlock();
+        if(this.isDropping)
+        {
+            this.spawnBehavior.SpawnBlock();
+        }
     }
 }
