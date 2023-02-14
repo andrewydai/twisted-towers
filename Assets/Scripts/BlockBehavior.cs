@@ -17,7 +17,7 @@ public class BlockBehavior : MonoBehaviour
     void Start()
     {
         this.highlightObj = Instantiate(this.highlight, this.transform);
-        this.highlightObj.transform.localPosition = Vector3.zero;
+        this.highlightObj.transform.localPosition = Vector3.forward;
         this.highlightObj.transform.localScale = (highlightObj.transform.localScale * new Vector2(0, 1)) + (Vector2.one * this.width);
         this.isDropping = true;
     }
