@@ -5,13 +5,14 @@ using UnityEngine;
 public class GameManagerBehavior : MonoBehaviour
 {
     public GameObject[] blockPrefabs;
+    public float generatorWeight = 1;
     private List<BlockSpawnBehavior> spawners;
     private BlockGenerator blockGenerator;
 
     // Start is called before the first frame update
     void Start()
     {
-        this.blockGenerator = new BlockGenerator(this.blockPrefabs);
+        this.blockGenerator = new BlockGenerator(this.blockPrefabs, this.generatorWeight);
         GameObject[] initialBlocks = RandomizeBlocks(10);
         this.spawners = new List<BlockSpawnBehavior>();
         var spawnerObjects = GameObject.FindGameObjectsWithTag("BlockSpawner");
@@ -52,12 +53,14 @@ public class BlockGenerator
     // It essnetially represents (number of blocks spawned) * (number of type of blocks - 1)
     // This is because each time a block spawns, we want to add to the count of all other blocks, 
     // incrementing the count by (number of type of blocks - 1), i.e. 6 if we have 7 types of blocks
-    private int totalCount;
+    private float totalCount;
     // an array of all the block spawn probability instances
     private BlockProbabilityRange[] blockProbabilityArr;
+    private float weight;
 
-    public BlockGenerator(GameObject[] blockPrefabs)
+    public BlockGenerator(GameObject[] blockPrefabs, float weight)
     {
+        this.weight = weight;
         int blockCount = blockPrefabs.Length;
         this.blockProbabilityArr = new BlockProbabilityRange[blockCount];
         // our initial total count is the (number of type of blocks), which creates an initial probability
@@ -82,7 +85,7 @@ public class BlockGenerator
     {
         // to avoid iterating twice, we find the next block and update in the same pass of our array
         // this requires us to calculate some things now like the next total count
-        int nextTotalCount = this.totalCount + this.blockProbabilityArr.Length - 1;
+        float nextTotalCount = this.totalCount + ((this.blockProbabilityArr.Length - 1) * this.weight);
         // calculate the next block by grabbing a random number between 0 - 1 (and seeing what range it falls in)
         float randomNum = Random.Range(0f, 1f);
         // like the constructor, our initial range is 0f, and will be used to update the probabilities
@@ -93,15 +96,16 @@ public class BlockGenerator
         {
             BlockProbabilityRange blockProb = this.blockProbabilityArr[i];
             // determine whether this block is being selected as the next block i.e. does it's range contain the
-            // random number generated
-            bool isNext = false;
+            // random number generated and a block hasn't already been selected
+            float updateCount = this.weight;
             if ((randomNum <= blockProb.upperRange || i == this.blockProbabilityArr.Length - 1) && nextBlock == null)
             {
                 nextBlock = blockProb.prefab;
-                isNext = true;
+                // if it's next, don't update it's count
+                updateCount = 0;
             }
             // update the blocks probability of being selected and range
-            blockProb.UpdateRange(nextTotalCount, prevUpperRange, isNext);
+            blockProb.UpdateRange(nextTotalCount, prevUpperRange, updateCount);
             prevUpperRange = blockProb.upperRange;
         }
         // update the totalCount and return the selected block's prefab
@@ -129,27 +133,24 @@ public class BlockProbabilityRange
     // block's prefab
     public GameObject prefab;
     // current count, essentially the number of times other blocks have been chosen
-    private int currentCount;
+    private float currentCount;
     // the upper range of the range that this block's probabiltiy lies in. Essentially,
     // the size of the range should increase the more it gets passed over in the selection
     // phase. Note that the range increasing =/= upperRange increasing
     public float upperRange;
 
-    public BlockProbabilityRange(GameObject prefab, int totalCount, float prevUpperRange)
+    public BlockProbabilityRange(GameObject prefab, float totalCount, float prevUpperRange)
     {
         this.prefab = prefab;
         this.currentCount = 0;
         // update the range initially, this is intended to give an initial 1 / totalCount probability
-        this.UpdateRange(totalCount, prevUpperRange, false);
+        this.UpdateRange(totalCount, prevUpperRange, 1);
     }
 
-    public void UpdateRange(float totalCount, float prevUpperRange, bool isNext)
+    public void UpdateRange(float totalCount, float prevUpperRange, float updateCount)
     {
         // if this block is next, don't increment it
-        if (!isNext)
-        {
-            this.currentCount++;
-        }
+        this.currentCount += updateCount;
         // recalculate the probability with the added counts and the upperRange
         float probability = this.currentCount / totalCount;
         this.upperRange = probability + prevUpperRange;

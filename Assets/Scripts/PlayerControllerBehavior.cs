@@ -7,6 +7,8 @@ public class PlayerControllerBehavior : MonoBehaviour
     public float stepSize;
     private GameObject currentBlock;
     public float tickLength;
+    public string leftKey;
+    public string rightKey;
     private float currentTick;
     private string previousFramesKey;
     private IDictionary<string, Vector3> movementVectors;
@@ -17,8 +19,8 @@ public class PlayerControllerBehavior : MonoBehaviour
         this.currentTick = 0;
         this.movementVectors = new Dictionary<string, Vector3>()
         {
-            {"a", Vector3.left * this.stepSize },
-            {"d", Vector3.right * this.stepSize },
+            {leftKey, Vector3.left * this.stepSize },
+            {rightKey, Vector3.right * this.stepSize },
         };
     }
 
@@ -55,13 +57,13 @@ public class PlayerControllerBehavior : MonoBehaviour
 
     private string GetCurrentKey()
     {
-        if (Input.GetKey("a"))
+        if (Input.GetKey(leftKey))
         {
-            return "a";
+            return leftKey;
         }
-        if (Input.GetKey("d"))
+        if (Input.GetKey(rightKey))
         {
-            return "d";
+            return rightKey;
         }
 
         return null;
