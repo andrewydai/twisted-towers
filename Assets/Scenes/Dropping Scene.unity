@@ -478,6 +478,7 @@ MonoBehaviour:
   - {fileID: 4367830280611587639, guid: 801ede43aaee7c145aaf9cded6aa3f4e, type: 3}
   - {fileID: 7260937190156234209, guid: 1dd6d32955d2bc04ca584b9616511583, type: 3}
   - {fileID: 1147943064367094312, guid: fa62b6b8ee9d3c64aab87578d35cad62, type: 3}
+  generatorWeight: 1
 --- !u!1 &1293093073
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,6 +820,8 @@ MonoBehaviour:
   tickLength: 0.1
   leftKey: left
   rightKey: right
+  rotateClockWiseKey: right ctrl
+  rotateCounterClockWiseKey: 
 --- !u!4 &1969289101
 Transform:
   m_ObjectHideFlags: 0
@@ -866,6 +869,8 @@ MonoBehaviour:
   tickLength: 0.1
   leftKey: a
   rightKey: d
+  rotateClockWiseKey: left ctrl
+  rotateCounterClockWiseKey: 
 --- !u!4 &2082865477
 Transform:
   m_ObjectHideFlags: 0

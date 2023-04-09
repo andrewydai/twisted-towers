@@ -12,13 +12,15 @@ public class BlockBehavior : MonoBehaviour
     private float despawnY = -12;
     private GameObject highlightObj;
     private BlockSpawnBehavior spawnBehavior;
+    private Quaternion initRotation;
 
     // Start is called before the first frame update
     void Start()
     {
         this.highlightObj = Instantiate(this.highlight, this.transform);
         this.highlightObj.transform.localPosition = Vector3.forward;
-        this.highlightObj.transform.localScale = (highlightObj.transform.localScale * new Vector2(0, 1)) + (Vector2.one * this.width);
+        this.initRotation = this.transform.rotation;
+        this.SetHighlightWidth(this.width);
         this.isDropping = true;
     }
 
@@ -36,6 +38,7 @@ public class BlockBehavior : MonoBehaviour
             GameObject.Destroy(gameObject);
         }
     }
+        
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -56,6 +59,26 @@ public class BlockBehavior : MonoBehaviour
     public void setSpawnBehavior(BlockSpawnBehavior spawnBehavior)
     {
         this.spawnBehavior = spawnBehavior;
+    }
+
+    public void Rotate()
+    {
+        this.transform.Rotate(0, 0, 90);
+        this.highlightObj.transform.rotation = this.initRotation;
+        if (this.highlightObj.transform.localScale.x == this.width)
+        {
+            this.SetHighlightWidth(this.rotatedWidth);
+        }
+        else
+        {
+            this.SetHighlightWidth(this.width);
+        }
+
+    }
+
+    private void SetHighlightWidth(float width)
+    {
+        this.highlightObj.transform.localScale = (highlightObj.transform.localScale * new Vector2(0, 1)) + (Vector2.one * width);
     }
 
     private void OnDestroy()
