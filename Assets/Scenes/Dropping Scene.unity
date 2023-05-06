@@ -821,7 +821,9 @@ MonoBehaviour:
   leftKey: left
   rightKey: right
   rotateClockWiseKey: right ctrl
-  rotateCounterClockWiseKey: 
+  maxActionThresholdTime: 0.3
+  minActionThresholdTime: 0.1
+  thresholdDecrementRate: 0.1
 --- !u!4 &1969289101
 Transform:
   m_ObjectHideFlags: 0
@@ -870,7 +872,9 @@ MonoBehaviour:
   leftKey: a
   rightKey: d
   rotateClockWiseKey: left ctrl
-  rotateCounterClockWiseKey: 
+  maxActionThresholdTime: 0.3
+  minActionThresholdTime: 0.1
+  thresholdDecrementRate: 0.1
 --- !u!4 &2082865477
 Transform:
   m_ObjectHideFlags: 0
