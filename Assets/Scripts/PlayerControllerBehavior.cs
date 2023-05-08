@@ -11,6 +11,7 @@ public class PlayerControllerBehavior : MonoBehaviour
     public string leftKey;
     public string rightKey;
     public string rotateClockWiseKey;
+    public string downKey;
     private string prevDownKey;
     private string[] keyList;
     private string[] holdableKeys;
@@ -24,7 +25,7 @@ public class PlayerControllerBehavior : MonoBehaviour
     private void Start()
     {
         // instantiate the list of all keys
-        this.keyList = new string[] { this.leftKey, this.rightKey, this.rotateClockWiseKey };
+        this.keyList = new string[] { this.leftKey, this.rightKey, this.rotateClockWiseKey, this.downKey };
         // instantiate the list of keys that can be held down
         this.holdableKeys = new string[] { this.leftKey, this.rightKey };
         // instantiate initial values of the action threshold
@@ -35,9 +36,10 @@ public class PlayerControllerBehavior : MonoBehaviour
     private void Update()
     {
         // keep track of a list of keys that were pressed down this frame
-        // and keys that are held down this frame
+        // keys that are held down this frame, and keys released this frame
         List<string> currentDownKeys = new List<string>();
         List<string> currentHeldKeys = new List<string>();
+        List<string> currentUpKeys = new List<string>();
         // keep track of whether a key being held down this frame was 
         // the most recent pressed down key
         bool matchedPrevDownKey = false;
@@ -60,6 +62,11 @@ public class PlayerControllerBehavior : MonoBehaviour
             if (Input.GetKeyDown(key))
             {
                 currentDownKeys.Add(key);
+            }// if the key is released this frame, add it to the key down list
+
+            if (Input.GetKeyUp(key))
+            {
+                currentUpKeys.Add(key);
             }
         }
 
@@ -82,27 +89,39 @@ public class PlayerControllerBehavior : MonoBehaviour
         {
             this.ResolveHeldKey(currentHeldKeys[0]);
         }
+        // call ResolveUpKey with each released key, which allows for extra logic to be hooked in
+        // for when a certain key is released (only used for down key right now)
+        foreach(string key in currentUpKeys)
+        {
+            this.ResolveUpKey(key);
+        }
     }
 
     private void ResolveDownKey(string key)
     {
+        // reset any variables related to action threshold
+        this.ResetOtherActionStates();
         // if the key is pressed down, resolve it without condition
         this.prevDownKey = key;
         this.ResolveInput(key);
-        // reset any variables related to action threshold
+    }
+
+    private void ResetOtherActionStates()
+    {
         this.keyHoldTime = 0;
         this.actionThresholdTime = maxActionThresholdTime;
+        this.currentBlock.GetComponent<BlockBehavior>().DeccelerateDropSpeed();
     }
 
     private void ResolveHeldKey(string key)
     {
         // if the key is held down, check that it's a holdable key
-        if(Array.IndexOf(this.holdableKeys, key) > -1)
+        if (Array.IndexOf(this.holdableKeys, key) > -1)
         {
             // if the key has been held for longer than the action threshold
             // resolve the action and reset
             float currentKeyHoldTime = this.keyHoldTime + Time.deltaTime;
-            if (currentKeyHoldTime >= actionThresholdTime)
+            if (currentKeyHoldTime >= this.actionThresholdTime)
             {
                 this.ResolveInput(key);
                 this.keyHoldTime = 0;
@@ -117,6 +136,15 @@ public class PlayerControllerBehavior : MonoBehaviour
         }
     }
 
+    private void ResolveUpKey(string key)
+    {
+        if (key == this.downKey)
+        {
+            this.currentBlock.GetComponent<BlockBehavior>().DeccelerateDropSpeed();
+        }
+    }
+
+
     private void ResolveInput(string input)
     {
         if (input == this.leftKey)
@@ -130,6 +158,13 @@ public class PlayerControllerBehavior : MonoBehaviour
         else if (input == this.rotateClockWiseKey)
         {
             this.currentBlock.GetComponent<BlockBehavior>().Rotate();
+        }
+        else if (input == this.downKey)
+        {
+            // This should only be called from the ResolveDownKey method (for when you press down on the down key initially).
+            // Even though you can hold it, its behavior is unique and different from other holdable actions, so it's not added
+            // to the holdable list
+            this.currentBlock.GetComponent<BlockBehavior>().AccelerateDropSpeed();
         }
     }
 

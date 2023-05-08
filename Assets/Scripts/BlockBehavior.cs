@@ -7,7 +7,14 @@ public class BlockBehavior : MonoBehaviour
     public GameObject highlight;
     public float width;
     public float rotatedWidth;
-    private float blockSpeed;
+    
+    private float baseBlockSpeed;
+    private float maxBlockSpeed;
+    private float currentBlockSpeed;
+    private float blockAcceleration;
+    private bool isAccelerating;
+    private float tickTime;
+
     private bool isDropping;
     private float despawnY = -12;
     private GameObject highlightObj;
@@ -22,6 +29,8 @@ public class BlockBehavior : MonoBehaviour
         this.initRotation = this.transform.rotation;
         this.SetHighlightWidth(this.width);
         this.isDropping = true;
+        this.isAccelerating = false;
+        this.tickTime = 0;
     }
 
     // Update is called once per frame
@@ -29,8 +38,18 @@ public class BlockBehavior : MonoBehaviour
     {
         if (this.isDropping)
         {
-            float step = this.blockSpeed * Time.deltaTime;
+            float step = this.currentBlockSpeed * Time.deltaTime;
             transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, this.despawnY), step);
+
+            float currentTickTime = this.tickTime + Time.deltaTime;
+            if (currentTickTime >= this.blockAcceleration)
+            {
+                this.ChangeSpeed();
+            }
+            else
+            {
+                this.tickTime = currentTickTime;
+            }
         }
 
         if (transform.position.y <= despawnY)
@@ -51,12 +70,15 @@ public class BlockBehavior : MonoBehaviour
         }
     }
 
-    public void setBlockSpeed(float speed)
+    public void SetBlockSpeedAttrs(float baseBlockSpeed, float maxBlockSpeed, float blockAcceleration)
     {
-        this.blockSpeed = speed;
+        this.baseBlockSpeed = baseBlockSpeed;
+        this.maxBlockSpeed = maxBlockSpeed;
+        this.blockAcceleration = blockAcceleration;
+        this.currentBlockSpeed = this.baseBlockSpeed;
     }
 
-    public void setSpawnBehavior(BlockSpawnBehavior spawnBehavior)
+    public void SetSpawnBehavior(BlockSpawnBehavior spawnBehavior)
     {
         this.spawnBehavior = spawnBehavior;
     }
@@ -76,6 +98,36 @@ public class BlockBehavior : MonoBehaviour
 
     }
 
+    public void AccelerateDropSpeed()
+    {
+        this.tickTime = 0;
+        this.isAccelerating = true;
+    }
+
+    public void DeccelerateDropSpeed()
+    {
+        this.tickTime = 0;
+        this.isAccelerating = false;
+    }
+
+    private void ChangeSpeed()
+    {
+        if (this.isAccelerating)
+        {
+            if (this.currentBlockSpeed < this.maxBlockSpeed)
+            {
+                this.currentBlockSpeed = Mathf.Min(this.maxBlockSpeed, this.currentBlockSpeed + 0.1f);
+            }
+        }
+        else
+        {
+            if (this.baseBlockSpeed < this.currentBlockSpeed)
+            {
+                this.currentBlockSpeed = Mathf.Max(this.baseBlockSpeed, this.currentBlockSpeed - 0.1f);
+            }
+        }
+    }
+    
     private void SetHighlightWidth(float width)
     {
         this.highlightObj.transform.localScale = (highlightObj.transform.localScale * new Vector2(0, 1)) + (Vector2.one * width);

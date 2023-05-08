@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class BlockSpawnBehavior : MonoBehaviour
 {
-    public float blockDropSpeed;
+    public float blockBaseDropSpeed;
+    public float maxBlockDropSpeed;
+    public float blockAcceleration;
     public PlayerControllerBehavior playerControllerBehavior;
     public GameManagerBehavior gameManagerBehavior;
     private Queue<GameObject> nextBlocks = new Queue<GameObject>();
@@ -13,10 +15,10 @@ public class BlockSpawnBehavior : MonoBehaviour
     public void SpawnBlock()
     {
         var block = Instantiate(this.nextBlocks.Dequeue(), transform.position, transform.rotation);
-        playerControllerBehavior.SetBlock(block);
+        this.playerControllerBehavior.SetBlock(block);
         var blockBehavior = block.GetComponent<BlockBehavior>();
-        blockBehavior.setBlockSpeed(blockDropSpeed);
-        blockBehavior.setSpawnBehavior(this);
+        blockBehavior.SetBlockSpeedAttrs(this.blockBaseDropSpeed, this.maxBlockDropSpeed, this.blockAcceleration);
+        blockBehavior.SetSpawnBehavior(this);
 
         if (this.nextBlocks.Count <= 2)
         {
