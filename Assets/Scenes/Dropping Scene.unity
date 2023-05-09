@@ -249,7 +249,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a6775d21dda4dd45bf96f7e7bf510ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockDropSpeed: 8
+  blockBaseDropSpeed: 5
+  maxBlockDropSpeed: 15
+  blockAcceleration: 0.1
   playerControllerBehavior: {fileID: 1969289100}
   gameManagerBehavior: {fileID: 0}
 --- !u!1 &887430683
@@ -770,7 +772,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a6775d21dda4dd45bf96f7e7bf510ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockDropSpeed: 8
+  blockBaseDropSpeed: 5
+  maxBlockDropSpeed: 15
+  blockAcceleration: 0.1
   playerControllerBehavior: {fileID: 2082865476}
   gameManagerBehavior: {fileID: 0}
 --- !u!4 &1839092397
@@ -821,7 +825,10 @@ MonoBehaviour:
   leftKey: left
   rightKey: right
   rotateClockWiseKey: right ctrl
-  rotateCounterClockWiseKey: 
+  downKey: down
+  maxActionThresholdTime: 0.3
+  minActionThresholdTime: 0.1
+  thresholdDecrementRate: 0.1
 --- !u!4 &1969289101
 Transform:
   m_ObjectHideFlags: 0
@@ -870,7 +877,10 @@ MonoBehaviour:
   leftKey: a
   rightKey: d
   rotateClockWiseKey: left ctrl
-  rotateCounterClockWiseKey: 
+  downKey: s
+  maxActionThresholdTime: 0.3
+  minActionThresholdTime: 0.1
+  thresholdDecrementRate: 0.1
 --- !u!4 &2082865477
 Transform:
   m_ObjectHideFlags: 0
