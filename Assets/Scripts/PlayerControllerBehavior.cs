@@ -138,6 +138,8 @@ public class PlayerControllerBehavior : MonoBehaviour
 
     private void ResolveUpKey(string key)
     {
+        this.prevDownKey = null;
+
         if (key == this.downKey)
         {
             this.currentBlock.GetComponent<BlockBehavior>().DeccelerateDropSpeed();
@@ -180,5 +182,9 @@ public class PlayerControllerBehavior : MonoBehaviour
     public void SetBlock(GameObject block)
     {
         this.currentBlock = block;
+        if (this.prevDownKey == this.downKey)
+        {
+            this.currentBlock.GetComponent<BlockBehavior>().AccelerateDropSpeed();
+        }
     }
 }

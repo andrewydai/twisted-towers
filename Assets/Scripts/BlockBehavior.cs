@@ -29,7 +29,8 @@ public class BlockBehavior : MonoBehaviour
         this.initRotation = this.transform.rotation;
         this.SetHighlightWidth(this.width);
         this.isDropping = true;
-        this.isAccelerating = false;
+        // if this is undefined, set it to false, else keep it what it was (fixes some strange ordering issues)
+        this.isAccelerating = !this.isAccelerating ? false : this.isAccelerating;
         this.tickTime = 0;
     }
 
@@ -66,16 +67,16 @@ public class BlockBehavior : MonoBehaviour
             this.isDropping = false;
             gameObject.GetComponent<Rigidbody2D>().gravityScale = 3;
             GameObject.Destroy(this.highlightObj);
-            this.spawnBehavior.SpawnBlock();
+            this.spawnBehavior.SpawnBlock(this.currentBlockSpeed);
         }
     }
 
-    public void SetBlockSpeedAttrs(float baseBlockSpeed, float maxBlockSpeed, float blockAcceleration)
+    public void SetBlockSpeedAttrs(float currentBlockSpeed, float baseBlockSpeed, float maxBlockSpeed, float blockAcceleration)
     {
+        this.currentBlockSpeed = currentBlockSpeed;
         this.baseBlockSpeed = baseBlockSpeed;
         this.maxBlockSpeed = maxBlockSpeed;
         this.blockAcceleration = blockAcceleration;
-        this.currentBlockSpeed = this.baseBlockSpeed;
     }
 
     public void SetSpawnBehavior(BlockSpawnBehavior spawnBehavior)
@@ -85,7 +86,7 @@ public class BlockBehavior : MonoBehaviour
 
     public void Rotate()
     {
-        this.transform.Rotate(0, 0, 90);
+        this.transform.Rotate(0, 0, -90);
         this.highlightObj.transform.rotation = this.initRotation;
         if (this.highlightObj.transform.localScale.x == this.width)
         {
@@ -137,7 +138,7 @@ public class BlockBehavior : MonoBehaviour
     {
         if (gameObject.scene.isLoaded && this.isDropping)
         {
-            this.spawnBehavior.SpawnBlock();
+            this.spawnBehavior.SpawnBlock(this.currentBlockSpeed);
         }
     }
 }

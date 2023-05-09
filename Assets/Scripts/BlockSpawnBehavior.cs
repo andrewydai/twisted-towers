@@ -12,12 +12,13 @@ public class BlockSpawnBehavior : MonoBehaviour
     private Queue<GameObject> nextBlocks = new Queue<GameObject>();
 
 
-    public void SpawnBlock()
+    public void SpawnBlock(float prevSpeed = 0)
     {
+        float startSpeed = prevSpeed == 0 ? this.blockBaseDropSpeed : prevSpeed;
         var block = Instantiate(this.nextBlocks.Dequeue(), transform.position, transform.rotation);
         this.playerControllerBehavior.SetBlock(block);
         var blockBehavior = block.GetComponent<BlockBehavior>();
-        blockBehavior.SetBlockSpeedAttrs(this.blockBaseDropSpeed, this.maxBlockDropSpeed, this.blockAcceleration);
+        blockBehavior.SetBlockSpeedAttrs(startSpeed, this.blockBaseDropSpeed, this.maxBlockDropSpeed, this.blockAcceleration);
         blockBehavior.SetSpawnBehavior(this);
 
         if (this.nextBlocks.Count <= 2)
